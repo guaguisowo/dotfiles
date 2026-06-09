@@ -1,0 +1,55 @@
+(defpoll cpu :interval "2s"
+  "sh -c \"grep 'cpu ' /proc/stat | awk '{u=$$2+$$4; t=$$2+$$4+$$5; print int(u*100/t)}'\"")
+
+(defpoll ram :interval "2s"
+  "sh -c \"free | awk '/Mem:/ {print int($$3/$$2 * 100)}'\"")
+
+(defpoll volume :interval "1s"
+  "pamixer --get-volume")
+
+(defpoll song :interval "2s"
+  "playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null || echo 'No music'")
+
+;; 🔥 Detecta workspace activo (con teclado o click)
+(defpoll active_ws :interval "0.5s"
+  "hyprctl activeworkspace -j | jq '.id'")
+
+(defwidget workspaces []
+  (box :class "workspaces"
+
+    (button :class {active_ws == "1" ? "ws-active" : "ws"}
+            :onclick "hyprctl dispatch workspace 1" "1")
+
+    (button :class {active_ws == "2" ? "ws-active" : "ws"}
+            :onclick "hyprctl dispatch workspace 2" "2")
+
+    (button :class {active_ws == "3" ? "ws-active" : "ws"}
+            :onclick "hyprctl dispatch workspace 3" "3")
+
+    (button :class {active_ws == "4" ? "ws-active" : "ws"}
+            :onclick "hyprctl dispatch workspace 4" "4")
+
+    (button :class {active_ws == "5" ? "ws-active" : "ws"}
+            :onclick "hyprctl dispatch workspace 5" "5")
+  )
+)
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :x "1%" :y "1%" :width "98%" :height "38px")
+  :stacking "fg"
+  :windowtype "dock"
+
+  (box :class "bar"
+
+    (workspaces)
+
+    (label :class "time" :text {strftime("%H:%M")})
+
+    (label :class "music" :text song)
+
+    (label :class "stat" :text "🧠 ${cpu}%")
+    (label :class "stat" :text "💾 ${ram}%")
+    (label :class "stat" :text "🔊 ${volume}%")
+  )
+)

@@ -1,0 +1,24 @@
+x.visualizer {
+  color: #ff914d;
+  font-size: 10px;
+  margin: 0 10px;
+}
+
+.ws {
+  color: #ff914d;
+  margin-right: 5px;
+}
+
+.active {
+  background: #ff914d;
+  color: black;
+  border-radius: 5px;
+  padding: 0 5px;
+}
+
+.bar {
+  background: rgba(0,0,0,0.6);
+  border: 2px solid #ff914d;
+  border-radius: 10px;
+  padding: 4px 8px;
+}
